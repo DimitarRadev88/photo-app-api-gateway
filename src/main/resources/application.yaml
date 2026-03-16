@@ -20,6 +20,22 @@ spring:
                 - RemoveRequestHeader=Cookie
 #                - RewritePath=/users-ws/(?<segment>.*), /$\{segment}
 
+            - id: users-h2-console
+              uri: lb://users-ws
+              predicates:
+                - Path=/users/h2-console
+                - Method=GET
+              filters:
+                - RemoveRequestHeader=Cookie
+
+            - id: users-create
+              uri: lb://users-ws
+              predicates:
+                - Path=/users
+                - Method=POST
+              filters:
+                - RemoveRequestHeader=Cookie
+
 eureka:
   serviceUrl:
     defaultZone: http://localhost:8761/eureka/
