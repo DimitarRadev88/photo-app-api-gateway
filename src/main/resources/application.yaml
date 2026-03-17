@@ -5,36 +5,61 @@ spring:
     gateway:
       server:
         webflux:
-          discovery:
-            locator:
-              enabled: true
-              lower-case-service-id: true
+
+#          discovery:
+#            locator:
+#              enabled: true
+#              lower-case-service-id: true
 
           routes:
             - id: users-status-check
               uri: lb://users-ws
               predicates:
-                - Path=/users/status/check
+                - Path=/users-ws/users/status/check
                 - Method=GET
+                - Header=Authorization, Bearer (.*)
               filters:
                 - RemoveRequestHeader=Cookie
-#                - RewritePath=/users-ws/(?<segment>.*), /$\{segment}
+                - RewritePath=/users-ws/(?<segment>.*), /$\{segment}
+                - AuthorizationHeaderFilter
 
             - id: users-h2-console
               uri: lb://users-ws
               predicates:
-                - Path=/users/h2-console
+                - Path=/users-ws/h2-console
                 - Method=GET
               filters:
                 - RemoveRequestHeader=Cookie
+                - RewritePath=/users-ws/(?<segment>.*), /$\{segment}
 
             - id: users-create
               uri: lb://users-ws
               predicates:
-                - Path=/users
+                - Path=/users-ws/users
                 - Method=POST
               filters:
                 - RemoveRequestHeader=Cookie
+                - RewritePath=/users-ws/(?<segment>.*), /$\{segment}
+
+            - id: users-login
+              uri: lb://users-ws
+              predicates:
+                - Path=/users-ws/users/login
+                - Method=POST
+              filters:
+                - RemoveRequestHeader=Cookie
+                - RewritePath=/users-ws/(?<segment>.*), /$\{segment}
+
+            - id: users-delete
+              uri: lb://users-ws
+              predicates:
+                - Path=/users-ws/users/**
+                - Method=DELETE
+                - Header=Authorization, Bearer (.*)
+              filters:
+                - RemoveRequestHeader=Cookie
+                - RewritePath=/users-ws/(?<segment>.*), /$\{segment}
+                - AuthorizationHeaderFilter
 
 eureka:
   serviceUrl:
@@ -42,3 +67,14 @@ eureka:
 
 server:
   port: 8888
+
+api:
+  registration:
+    url: "/users-ws/users"
+  login:
+    url: "/users-ws/users/login"
+  h2-console:
+    url: "/users-ws/h2-console"
+
+token:
+  secret: "890qw374ghvipujrahfv9piu8wq34hf98734rf897hjviupjrfgeirhugfaipuoshiperubniaergpubn"
