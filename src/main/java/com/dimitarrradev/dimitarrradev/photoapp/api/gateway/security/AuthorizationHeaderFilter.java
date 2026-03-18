@@ -1,8 +1,6 @@
 package com.dimitarrradev.dimitarrradev.photoapp.api.gateway.security;
 
-import io.jsonwebtoken.Jwt;
-import io.jsonwebtoken.JwtParser;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
@@ -74,8 +72,9 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
 
         String subject = null;
         try {
-            Jwt<?, ?> parse = jwtParser.parse(jwt);
-            subject = parse.getPayload().toString();
+            Claims claims = jwtParser.parseSignedClaims(jwt).getPayload();
+
+            subject = String.valueOf(claims.get("sub"));
 
         } catch (Exception ex) {
             return false;

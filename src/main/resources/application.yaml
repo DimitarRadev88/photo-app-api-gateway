@@ -50,11 +50,11 @@ spring:
                 - RemoveRequestHeader=Cookie
                 - RewritePath=/users-ws/(?<segment>.*), /$\{segment}
 
-            - id: users-delete
+            - id: users-get-update-delete
               uri: lb://users-ws
               predicates:
                 - Path=/users-ws/users/**
-                - Method=DELETE
+                - Method=GET, PUT, DELETE
                 - Header=Authorization, Bearer (.*)
               filters:
                 - RemoveRequestHeader=Cookie
