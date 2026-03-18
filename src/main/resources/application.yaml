@@ -75,6 +75,3 @@ api:
     url: "/users-ws/users/login"
   h2-console:
     url: "/users-ws/h2-console"
-
-token:
-  secret: "890qw374ghvipujrahfv9piu8wq34hf98734rf897hjviupjrfgeirhugfaipuoshiperubniaergpubn"
