@@ -1,7 +1,22 @@
 spring:
+
   application:
-    name: api-gateway
+    name: apigateway
+
+  rabbitmq:
+    username: user
+    password: password
+
+  config:
+    import: optional:configserver:http://localhost:8088
+
   cloud:
+
+    bus:
+      enabled: true
+      refresh:
+        enabled: true
+
     gateway:
       server:
         webflux:
@@ -22,6 +37,15 @@ spring:
                 - RemoveRequestHeader=Cookie
                 - RewritePath=/users-ws/(?<segment>.*), /$\{segment}
                 - AuthorizationHeaderFilter
+
+            - id: users-actuator-refresh
+              uri: lb://users-ws
+              predicates:
+                - Path=/users-ws/actuator/**
+                - Method=GET, POST
+              filters:
+                - RemoveRequestHeader=Cookie
+                - RewritePath=/users-ws/(?<segment>.*), /$\{segment}
 
             - id: users-h2-console
               uri: lb://users-ws
@@ -75,3 +99,9 @@ api:
     url: "/users-ws/users/login"
   h2-console:
     url: "/users-ws/h2-console"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh, busrefresh
