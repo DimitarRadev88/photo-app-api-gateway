@@ -12,6 +12,11 @@ spring:
 
   cloud:
 
+    config:
+      uri: https://localhost:8082
+      username: client
+      password: 123456
+
     bus:
       enabled: true
       refresh:
