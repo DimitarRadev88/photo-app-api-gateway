@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: apigateway
+
+  config:
+    import: optional:configserver:http://localhost:8888
+
+  cloud:
+    config:
+      uri: https://localhost:8888
+      username: client
+      password: 123456
