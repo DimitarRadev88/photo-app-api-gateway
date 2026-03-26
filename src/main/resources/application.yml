@@ -84,6 +84,15 @@ spring:
                 - RewritePath=/users-ws/(?<segment>.*), /$\{segment}
                 - AuthorizationHeaderFilter
 
+            - id: albums-status-check
+              uri: lb://albums-ws
+              predicates:
+                - Path=/albums-ws/albums/status/check
+                - Method=GET
+              filters:
+                - RemoveRequestHeader=Cookie
+                - RewritePath=/albums-ws/(?<segment>.*), /$\{segment}
+
 eureka:
   serviceUrl:
     defaultZone: http://localhost:8761/eureka/
