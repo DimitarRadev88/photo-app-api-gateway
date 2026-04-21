@@ -84,6 +84,15 @@ spring:
                 - RewritePath=/users-ws/(?<segment>.*), /$\{segment}
                 - AuthorizationHeaderFilter
 
+            - id: users-ws-actuator
+              uri: lb://users-ws
+              predicates:
+                - Path=/users-ws/actuator/**
+                - Method=GET
+              filters:
+                - RemoveRequestHeader=Cookie
+                - RewritePath=/users-ws/(?<segment>.*), /$\{segment}
+
             - id: albums-status-check
               uri: lb://albums-ws
               predicates:
@@ -92,6 +101,8 @@ spring:
               filters:
                 - RemoveRequestHeader=Cookie
                 - RewritePath=/albums-ws/(?<segment>.*), /$\{segment}
+
+
 
 eureka:
   serviceUrl:
