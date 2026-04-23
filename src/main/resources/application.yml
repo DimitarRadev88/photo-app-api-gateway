@@ -7,14 +7,14 @@ spring:
     username: user
     password: password
 
+  bus:
+    enabled: true
+    refresh:
+      enabled: true
+
   cloud:
     bootstrap:
-      enabled=true:
-
-    bus:
       enabled: true
-      refresh:
-        enabled: true
 
     gateway:
       server:
@@ -93,14 +93,14 @@ spring:
                 - RemoveRequestHeader=Cookie
                 - RewritePath=/users-ws/(?<segment>.*), /$\{segment}
 
-            - id: albums-status-check
-              uri: lb://albums-ws
-              predicates:
-                - Path=/albums-ws/albums/status/check
-                - Method=GET
-              filters:
-                - RemoveRequestHeader=Cookie
-                - RewritePath=/albums-ws/(?<segment>.*), /$\{segment}
+#            - id: albums-status-check
+#              uri: lb://albums-ws
+#              predicates:
+#                - Path=/albums-ws/albums/status/check
+#                - Method=GET
+#              filters:
+#                - RemoveRequestHeader=Cookie
+#                - RewritePath=/albums-ws/(?<segment>.*), /$\{segment}
 
 
 
@@ -122,8 +122,7 @@ api:
   h2-console:
     url: "/users-ws/h2-console"
 
-management:
-  endpoints:
-    web:
-      exposure:
-        include: refresh, busrefresh
+logging:
+  pattern:
+    correlation: "[${spring.application.name:},%X{traceId:-},%X{spanId:-}] "
+  include-application-name: false
