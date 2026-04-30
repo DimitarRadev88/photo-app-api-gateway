@@ -105,10 +105,12 @@ spring:
 
 
 eureka:
-  serviceUrl:
-    defaultZone: http://localhost:8761/eureka/
-
   client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+
+    registerWithEureka: true
+
     eureka-service-url-poll-interval-seconds: 60
 
 server:
